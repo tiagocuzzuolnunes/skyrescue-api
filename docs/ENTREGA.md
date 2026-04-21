@@ -19,8 +19,7 @@ sobrevivencia.
 
 | Nome                            | RM         |
 | ------------------------------- | ---------- |
-| Tiago Cuzzuol Nunes             | RM XXXXXX  |
-| (preencher demais integrantes)  |            |
+| Tiago Tiradentes Cuzzuol Nunes  | RM 560754  |
 
 
 ## Descricao do pipeline CI/CD

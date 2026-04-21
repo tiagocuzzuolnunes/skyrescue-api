@@ -11,10 +11,13 @@ RUN mvn -B -e -ntp clean package -DskipTests \
     && mkdir -p target/extracted \
     && java -Djarmode=layertools -jar target/skyrescue-api.jar extract --destination target/extracted
 
-FROM eclipse-temurin:17-jre-alpine AS runtime
+FROM eclipse-temurin:17-jre-jammy AS runtime
 
-RUN addgroup -S skyrescue && adduser -S skyrescue -G skyrescue \
-    && apk add --no-cache curl
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && groupadd --system --gid 1001 skyrescue \
+    && useradd  --system --uid 1001 --gid 1001 --home-dir /app --shell /usr/sbin/nologin skyrescue
 
 WORKDIR /app
 
@@ -22,13 +25,12 @@ ENV JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -XX:+ExitOnOut
     SPRING_PROFILES_ACTIVE=prod \
     SERVER_PORT=8080
 
-COPY --from=build /workspace/target/extracted/dependencies/ ./
-COPY --from=build /workspace/target/extracted/spring-boot-loader/ ./
-COPY --from=build /workspace/target/extracted/snapshot-dependencies/ ./
-COPY --from=build /workspace/target/extracted/application/ ./
+COPY --from=build --chown=skyrescue:skyrescue /workspace/target/extracted/dependencies/ ./
+COPY --from=build --chown=skyrescue:skyrescue /workspace/target/extracted/spring-boot-loader/ ./
+COPY --from=build --chown=skyrescue:skyrescue /workspace/target/extracted/snapshot-dependencies/ ./
+COPY --from=build --chown=skyrescue:skyrescue /workspace/target/extracted/application/ ./
 
-RUN chown -R skyrescue:skyrescue /app
-USER skyrescue
+USER 1001:1001
 
 EXPOSE 8080
 

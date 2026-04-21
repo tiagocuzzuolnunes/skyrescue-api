@@ -223,5 +223,5 @@ documento tecnico (`docs/ENTREGA.pdf`).
 
 ## Integrantes
 
-- Tiago Cuzzuol Nunes - RM XXXXXX
-- (adicione aqui demais integrantes do grupo)
+- Tiago Tiradentes Cuzzuol Nunes - RM 560754
+
